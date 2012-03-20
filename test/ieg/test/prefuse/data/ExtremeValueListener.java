@@ -1,4 +1,4 @@
-package ieg.prefuse.data;
+package ieg.test.prefuse.data;
 
 import prefuse.data.Table;
 import prefuse.data.column.Column;

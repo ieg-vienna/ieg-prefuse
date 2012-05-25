@@ -1,6 +1,7 @@
 package ieg.prefuse.data;
 
 import java.io.PrintStream;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.TreeMap;
 
@@ -138,6 +139,89 @@ public class DataHelper {
 
             out.println();
         }
+    }
+    
+    /**
+     * Helper method to dump specific columns of a graph, starting at a given node, treating that one as root, ignoring cycles
+     * @param out the output to use
+     * @param start the node to start printing
+     * @param cols the name of the columns
+     */
+    @SuppressWarnings("unchecked")
+    public static void printGraph(PrintStream out, Node start, String... cols) {
+
+    	int depth = graphDepthHelper(start,new ArrayList<Node>());    	    
+    	
+		for(int j=0; j<depth;j++)
+			out.printf("  ");
+        for (String c : cols) 
+            out.printf(" %16s", c + " ");
+            
+        out.println();
+
+        printGraphHelper(out,start,cols,depth,new ArrayList<Node>(),0);
+    }    
+    
+    /**
+     * Helper method to dump a graph, starting at a given node, treating that one as root, ignoring cycles
+     * @param out the output to use
+     * @param start the node to start printing
+     */
+    public static void printGraph(PrintStream out, Node start) {
+    	Table table = start.getTable();
+        String[] cols = new String[table.getColumnCount()];
+        for (int i=0; i< cols.length; i++) 
+            cols[i] = table.getColumnName(i);
+        
+        printGraph(out, start, cols);
+    }
+    
+    /**
+     * Calculates depth of a graph from a node, treating that one as root, ignoring cycles
+     * @param current node to recurse on
+     * @param visited list of visited nodes
+     * @return current depth
+     */
+    private static int graphDepthHelper(Node current,ArrayList<Node> visited) {
+    	visited.add(current);
+    	Node iNode;
+    	int maxDepth = 0;
+    	for(Iterator i = current.neighbors(); i.hasNext();) {
+    		iNode=(Node)i.next();
+    		if(!visited.contains(iNode))
+    			maxDepth = Math.max(maxDepth, graphDepthHelper(iNode,visited));   		
+    	}
+    	
+    	return maxDepth+1;
+    }
+    
+    /**
+     * Helper method to dump specific columns of a graph, starting at a given node, treating that one as root, ignoring cycles
+     * @param out the output to use
+     * @param current node to recurse on
+     * @param cols the name of the columns
+     * @param depth maximum graph depth
+     * @param visited list of visited nodes
+     * @param level current level
+     */
+    private static void printGraphHelper(PrintStream out, Node current, String[] cols,int depth, ArrayList<Node> visited,int level) {
+    	visited.add(current);
+		for(int j=0; j<level;j++)
+			out.printf("  ");
+		out.printf("%2d", level);
+		for(int j=level; j<depth;j++)
+			out.printf("  ");
+        for (String c : cols) 
+            if (current.canGetString(c))
+                out.printf(" %16s", current.getString(c) + " ");
+        out.println();
+    	Node iNode;
+    	for(Iterator i = current.neighbors(); i.hasNext();) {
+    		iNode=(Node)i.next();
+    		if(!visited.contains(iNode)) {
+    	        printGraphHelper(out,iNode,cols,depth,visited,level+1);
+    		}
+    	}    	
     }
 
     /**

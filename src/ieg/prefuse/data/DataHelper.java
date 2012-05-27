@@ -125,7 +125,7 @@ public class DataHelper {
     public static void printTable(PrintStream out, TupleSet table, String... cols) {
         
         for (String c : cols) 
-            out.printf(" %16s", c + " ");
+            out.printf(" %19s", c + " ");
             
         out.println();
 
@@ -135,7 +135,7 @@ public class DataHelper {
             
             for (String c : cols) 
                 if (tuple.canGetString(c))
-                    out.printf(" %16s", tuple.getString(c) + " ");
+                    out.printf(" %19s", tuple.getString(c) + " ");
 
             out.println();
         }
@@ -145,21 +145,24 @@ public class DataHelper {
      * Helper method to dump specific columns of a graph, starting at a given node, treating that one as root, ignoring cycles
      * @param out the output to use
      * @param start the node to start printing
+     * @param info additional information interface
      * @param cols the name of the columns
      */
     @SuppressWarnings("unchecked")
-    public static void printGraph(PrintStream out, Node start, String... cols) {
+    public static void printGraph(PrintStream out, Node start, AdditionalNodeInformation info, String... cols) {
 
     	int depth = graphDepthHelper(start,new ArrayList<Node>());    	    
     	
 		for(int j=0; j<depth;j++)
 			out.printf("  ");
         for (String c : cols) 
-            out.printf(" %16s", c + " ");
+            out.printf(" %19s", c + " ");
+		if (info != null)
+			out.printf(info.provideHeading(start.getTable()));
             
         out.println();
 
-        printGraphHelper(out,start,cols,depth,new ArrayList<Node>(),0);
+        printGraphHelper(out,start,info,cols,depth,new ArrayList<Node>(),0);
     }    
     
     /**
@@ -168,12 +171,22 @@ public class DataHelper {
      * @param start the node to start printing
      */
     public static void printGraph(PrintStream out, Node start) {
+        printGraph(out, start, null);
+    }
+    
+    /**
+     * Helper method to dump a graph, starting at a given node, treating that one as root, ignoring cycles
+     * @param out the output to use
+     * @param start the node to start printing
+     * @param info additional information interface
+     */
+    public static void printGraph(PrintStream out, Node start, AdditionalNodeInformation info) {
     	Table table = start.getTable();
         String[] cols = new String[table.getColumnCount()];
         for (int i=0; i< cols.length; i++) 
             cols[i] = table.getColumnName(i);
         
-        printGraph(out, start, cols);
+        printGraph(out, start, info, cols);
     }
     
     /**
@@ -199,29 +212,37 @@ public class DataHelper {
      * Helper method to dump specific columns of a graph, starting at a given node, treating that one as root, ignoring cycles
      * @param out the output to use
      * @param current node to recurse on
+     * @param info additional information interface
      * @param cols the name of the columns
      * @param depth maximum graph depth
      * @param visited list of visited nodes
      * @param level current level
      */
-    private static void printGraphHelper(PrintStream out, Node current, String[] cols,int depth, ArrayList<Node> visited,int level) {
+    private static void printGraphHelper(PrintStream out, Node current, AdditionalNodeInformation info, String[] cols,int depth, ArrayList<Node> visited,int level) {
     	visited.add(current);
 		for(int j=0; j<level;j++)
 			out.printf("  ");
 		out.printf("%2d", level);
-		for(int j=level; j<depth;j++)
+		for(int j=level; j<depth-1;j++)
 			out.printf("  ");
         for (String c : cols) 
             if (current.canGetString(c))
-                out.printf(" %16s", current.getString(c) + " ");
+                out.printf(" %19s", current.getString(c) + " ");
+		if(info != null)
+			out.printf(info.provideAdditionalInformation(current));
         out.println();
     	Node iNode;
     	for(Iterator i = current.neighbors(); i.hasNext();) {
     		iNode=(Node)i.next();
     		if(!visited.contains(iNode)) {
-    	        printGraphHelper(out,iNode,cols,depth,visited,level+1);
+    	        printGraphHelper(out,iNode,info,cols,depth,visited,level+1);
     		}
     	}    	
+    }
+    
+    public interface AdditionalNodeInformation {
+    	public String provideHeading(Table table);
+    	public String provideAdditionalInformation(Node node);
     }
 
     /**

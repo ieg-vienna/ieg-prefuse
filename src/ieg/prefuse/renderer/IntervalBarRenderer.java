@@ -4,143 +4,176 @@ import java.awt.Graphics2D;
 import java.awt.Shape;
 import java.awt.geom.Rectangle2D;
 
+import prefuse.Constants;
 import prefuse.render.AbstractShapeRenderer;
-import prefuse.render.Renderer;
-import prefuse.util.ColorLib;
 import prefuse.visual.VisualItem;
 
 /**
  * <p>
- * Renders a {@link VisualItem} with an interval.
+ * Renders a {@link VisualItem} with an interval as a rectangle (e.g., Gantt
+ * chart, LifeLines).
  * </p>
- * The interval is determined by the {@link VisualItem}s X Field (see
- * {@link VisualItem#X} and {@link VisualItem#getX()}) and the
+ * The interval is determined by the {@link VisualItem}'s coordinates (by
+ * default {@link VisualItem#X} and {@link VisualItem#getX()}) and the
  * {@link IntervalBarRenderer}s maxX (see
- * {@link IntervalBarRenderer#IntervalBarRenderer(String, String)} and
+ * {@link IntervalBarRenderer#IntervalBarRenderer(String)} and
  * {@link IntervalBarRenderer#getMaxXField()}) field. The rendered height is
- * determined by the height of the {@link VisualItem}s font.
+ * determined by the {@link VisualItem}'s size field and the base size.
+ * 
+ * <p>
+ * Added: 2012-06-13 / AR (based on work by Peter Weishapl)<br>
+ * Modifications: 2012-06-13 / AR / no label; height set by size field; y axis
+ * </p>
  * 
  * @author peterw
  * @see IntervalLayout
  */
 public class IntervalBarRenderer extends AbstractShapeRenderer {
-	protected Rectangle2D bounds = new Rectangle2D.Double();
-	private String textField;
-	protected String maxXField;
+    protected Rectangle2D bounds = new Rectangle2D.Double();
 
-	/**
-	 * Create a {@link IntervalBarRenderer}. Uses the given text data field
-	 * to draw it's text label and the maxX data field to determine the interval
-	 * to be rendered, which is from {@link VisualItem}s x data field to the
-	 * given maxX data field.
-	 * 
-	 * @param textField
-	 *            the data field used for the text label
-	 * @param maxXField
-	 *            the data field used for the interval
-	 */
-	public IntervalBarRenderer(String textField, String maxXField) {
-		this.textField = textField;
-		this.maxXField = maxXField;
-	}
+    private int m_axis = Constants.X_AXIS;
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see prefuse.render.AbstractShapeRenderer#render(java.awt.Graphics2D,
-	 * prefuse.visual.VisualItem)
-	 */
-	public void render(Graphics2D g, VisualItem item) {
-		renderBackground(g, item);
-		renderText(g, item, (int) item.getX());
-	}
+    protected String maxXField;
 
-	/**
-	 * Renders the background. Override this method to customize background
-	 * painting.
-	 * 
-	 * @param g
-	 *            graphics object
-	 * @param item
-	 *            the item to be rendered
-	 */
-	protected void renderBackground(Graphics2D g, VisualItem item) {
-		super.render(g, item);
-	}
+    private int m_baseSize = 10;
 
-	/**
-	 * Renders the text of the given item at the items y and the given x
-	 * position. The text may exceed the items bounds.
-	 * 
-	 * @param g
-	 *            graphics object
-	 * @param item
-	 *            the item to be rendered
-	 * @param x
-	 *            the x position of the text
-	 */
-	protected void renderText(Graphics2D g, VisualItem item, int x) {
-		String text = getText(item);
-		int textColor = item.getTextColor();
-		if (text != null && ColorLib.alpha(textColor) > 0) {
-			g.setPaint(ColorLib.getColor(textColor));
-			g.setFont(item.getFont());
+    /**
+     * Create a {@link IntervalBarRenderer}. Uses the given text data field to
+     * draw it's text label and the maxX data field to determine the interval to
+     * be rendered, which is from {@link VisualItem}s x data field to the given
+     * maxX data field.
+     * 
+     * @param textField
+     *            the data field used for the text label
+     * @param maxXField
+     *            the data field used for the interval
+     */
+    public IntervalBarRenderer(String maxXField) {
+        this.maxXField = maxXField;
+    }
 
-			int y = (int) (item.getBounds().getY() + DEFAULT_GRAPHICS
-					.getFontMetrics(item.getFont()).getAscent());
-			g.drawString(text, x, y);
-		}
-	}
+    public IntervalBarRenderer(String maxXField, int m_baseSize) {
+        this.maxXField = maxXField;
+        this.m_baseSize = m_baseSize;
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * prefuse.render.AbstractShapeRenderer#getRawShape(prefuse.visual.VisualItem
-	 * )
-	 */
-	protected Shape getRawShape(VisualItem item) {
-		double startX = item.getX();
-		double endX = item.getDouble(maxXField);
-		double y = item.getY();
-		double height = Renderer.DEFAULT_GRAPHICS
-				.getFontMetrics(item.getFont()).getHeight();
-		double width = endX - startX;
+    /*
+     * (non-Javadoc)
+     * 
+     * @see prefuse.render.AbstractShapeRenderer#render(java.awt.Graphics2D,
+     * prefuse.visual.VisualItem)
+     */
+    public void render(Graphics2D g, VisualItem item) {
+        renderBackground(g, item);
+        renderText(g, item, (int) item.getX());
+    }
 
-		bounds.setFrame(startX, y, width, height);
+    /**
+     * Renders the background. Override this method to customize background
+     * painting.
+     * 
+     * @param g
+     *            graphics object
+     * @param item
+     *            the item to be rendered
+     */
+    protected void renderBackground(Graphics2D g, VisualItem item) {
+        super.render(g, item);
+    }
 
-		return bounds;
-	}
+    /**
+     * Renders the text of the given item at the items y and the given x
+     * position. The text may exceed the items bounds.
+     * 
+     * @param g
+     *            graphics object
+     * @param item
+     *            the item to be rendered
+     * @param x
+     *            the x position of the text
+     */
+    protected void renderText(Graphics2D g, VisualItem item, int x) {
+        // do nothing; override if desired
+    }
 
-	/**
-	 * Returns the text of the given item, based on the text data field of this
-	 * {@link IntervalBarRenderer}.
-	 * 
-	 * @param item
-	 *            a {@link VisualItem}
-	 * @return the text of the item
-	 */
-	protected String getText(VisualItem item) {
-		String s = null;
-		if (item.canGetString(textField)) {
-			return item.getString(textField);
-		}
-		return s;
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * prefuse.render.AbstractShapeRenderer#getRawShape(prefuse.visual.VisualItem
+     * )
+     */
+    protected Shape getRawShape(VisualItem item) {
+        double startX = item.getX();
+        double endX = item.getDouble(maxXField);
+        double startY = item.getY();
+        double height = m_baseSize * item.getSize();
 
-	public String getMaxXField() {
-		return maxXField;
-	}
+        if (Constants.X_AXIS == m_axis) {
+            double width = endX - startX;
+            bounds.setFrame(startX, startY - height / 2, width, height);
+        } else {
+            double width = endX - startY;
+            System.out.println(startX - height / 2 + " " + startY + " "
+                    + height + " " + width);
+            bounds.setFrame(startX - height / 2, startY, height, width);
+        }
 
-	public void setMaxXField(String maxXField) {
-		this.maxXField = maxXField;
-	}
+        return bounds;
+    }
 
-	public String getTextField() {
-		return textField;
-	}
+    public String getMaxXField() {
+        return maxXField;
+    }
 
-	public void setTextField(String textField) {
-		this.textField = textField;
-	}
+    public void setMaxXField(String maxXField) {
+        this.maxXField = maxXField;
+    }
+
+    /**
+     * Sets the base size, in pixels, for shapes drawn by this renderer. The
+     * base size is the width and height value used when a VisualItem's size
+     * value is 1. The base size is scaled by the item's size value to arrive at
+     * the final scale used for rendering.
+     * 
+     * @param size
+     *            the base size in pixels
+     */
+    public void setBaseSize(int size) {
+        m_baseSize = size;
+    }
+
+    /**
+     * Returns the base size, in pixels, for shapes drawn by this renderer.
+     * 
+     * @return the base size in pixels
+     */
+    public int getBaseSize() {
+        return m_baseSize;
+    }
+
+    /**
+     * Return the axis type of this layout, either
+     * {@link prefuse.Constants#X_AXIS} or {@link prefuse.Constants#Y_AXIS}.
+     * 
+     * @return the axis type of this layout.
+     */
+    public int getAxis() {
+        return m_axis;
+    }
+
+    /**
+     * Set the axis type of this layout.
+     * 
+     * @param axis
+     *            the axis type to use for this layout, either
+     *            {@link prefuse.Constants#X_AXIS} or
+     *            {@link prefuse.Constants#Y_AXIS}.
+     */
+    public void setAxis(int axis) {
+        if (axis < 0 || axis >= Constants.AXIS_COUNT)
+            throw new IllegalArgumentException("Unrecognized axis value: "
+                    + axis);
+        m_axis = axis;
+    }
 }

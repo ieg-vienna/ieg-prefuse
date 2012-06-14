@@ -3,7 +3,6 @@ package ieg.prefuse.renderer;
 import java.awt.Shape;
 import java.awt.geom.Path2D;
 
-import prefuse.render.AbstractShapeRenderer;
 import prefuse.visual.VisualItem;
 
 /**
@@ -14,7 +13,7 @@ import prefuse.visual.VisualItem;
  * 
  * @author Alexander Rind 
  */
-public class StepChartLineRenderer extends AbstractShapeRenderer {
+public class StepChartLineRenderer extends LineRenderer {
 
     private Path2D path = new Path2D.Double();
 

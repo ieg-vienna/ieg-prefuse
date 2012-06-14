@@ -9,11 +9,11 @@ import prefuse.visual.VisualItem;
 // TODO subclass with bezier curves (cp. EdgeRenderer)
 /**
  * <p>
- * Added: 2012-06-14 / AR<br>
+ * Added: 2012-06-14 / AR (based on LineChart example by Jeff Heer)<br>
  * Modifications: 2012-0X-XX / XX / ...
  * </p>
  * 
- * @author Alexander Rind 
+ * @author Alexander Rind (based on LineChart example by Jeff Heer)
  */
 public class LineRenderer extends AbstractShapeRenderer {
 

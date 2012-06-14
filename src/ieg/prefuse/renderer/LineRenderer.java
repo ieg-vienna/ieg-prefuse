@@ -6,7 +6,6 @@ import java.awt.geom.Line2D;
 import prefuse.render.AbstractShapeRenderer;
 import prefuse.visual.VisualItem;
 
-// TODO subclass with Step Chart
 // TODO subclass with bezier curves (cp. EdgeRenderer)
 /**
  * <p>
@@ -21,6 +20,7 @@ public class LineRenderer extends AbstractShapeRenderer {
     private Line2D m_line = new Line2D.Double();
 
     // create Shape that draws a line
+    @Override
     protected Shape getRawShape(VisualItem item) {
         m_line.setLine(item.getX(), item.getY(), item.getDouble(VisualItem.X2),
                 item.getDouble(VisualItem.Y2));

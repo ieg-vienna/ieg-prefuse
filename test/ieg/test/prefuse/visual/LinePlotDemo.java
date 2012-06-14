@@ -144,7 +144,7 @@ public class LinePlotDemo extends JPanel {
         y_axis.setRangeModel(yAxisQueryBinding.getModel());
 
         // lineFilter creates line segments from points
-        LinePlotAction lineFilter = new LinePlotAction(LINES, POINTS);
+        LinePlotAction lineFilter = new LinePlotAction(LINES, POINTS, VisualItem.X);
         // lineLayout updates x and y coordinates of lines
         LinePlotLayout lineLayout = new LinePlotLayout(LINES);
 

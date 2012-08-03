@@ -8,7 +8,7 @@ import prefuse.data.expression.Predicate;
 
 public class IsNanPredicate extends FunctionExpression implements Predicate {
 
-    protected IsNanPredicate(Expression expr) {
+    public IsNanPredicate(Expression expr) {
         super(1);
         this.addParameter(expr);
     }

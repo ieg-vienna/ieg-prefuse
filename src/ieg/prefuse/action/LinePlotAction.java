@@ -52,6 +52,11 @@ public class LinePlotAction extends GroupAction {
         Iterator points = getSortedPoints();
         
         // add line segments
+        connectPoints(lines, points);
+    }
+    
+    @SuppressWarnings("rawtypes")
+    protected void connectPoints(VisualTable lines, Iterator points) {
         for ( VisualItem v1=null, v2; points.hasNext(); v1=v2 ) {
             v2 = (VisualItem)points.next();
             if ( v1 != null ) {

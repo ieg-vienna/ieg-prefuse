@@ -23,6 +23,9 @@ public class NestedNumberRangeModel extends NumberRangeModel {
 	public NestedNumberRangeModel(Number lo, Number hi,Number[] min, Number[] max) {
 		super(lo,hi,lo,hi);
 		
+		this.min = min;
+		this.max = max;
+		
 		recalculateMinMax();
 	}
 	
@@ -30,11 +33,14 @@ public class NestedNumberRangeModel extends NumberRangeModel {
 	 * 
 	 */
 	private void recalculateMinMax() {
-		m_min = 1;
+		double lmin = 1;
+		double lmax = 1;
 		for(int i=0; i<min.length; i++) {
-			//m_min m_min.byteValue()
-			//m_min *= min[i];
+			lmin *= min[i].doubleValue();
+			lmax *= max[i].doubleValue();
 		}
+		m_min = lmin;
+		m_max = lmax;
 	}
 
 	/**
@@ -49,6 +55,7 @@ public class NestedNumberRangeModel extends NumberRangeModel {
 	 */
 	public void setMin(Number[] min) {
 		this.min = min;
+		recalculateMinMax();
 	}
 
 	/**
@@ -63,5 +70,6 @@ public class NestedNumberRangeModel extends NumberRangeModel {
 	 */
 	public void setMax(Number[] max) {
 		this.max = max;
+		recalculateMinMax();
 	}
 }

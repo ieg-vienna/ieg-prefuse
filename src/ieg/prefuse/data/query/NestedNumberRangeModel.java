@@ -39,8 +39,7 @@ public class NestedNumberRangeModel extends NumberRangeModel {
 			lmin *= min[i].doubleValue();
 			lmax *= max[i].doubleValue();
 		}
-		m_min = lmin;
-		m_max = lmax;
+		setValueRange((Number)getLowValue(), (Number)getHighValue(), lmin, lmax);
 	}
 
 	/**

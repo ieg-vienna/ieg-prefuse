@@ -28,7 +28,8 @@ import prefuse.util.ui.ValuedRangeModel;
  */
 public class RangeModelTransformationDisplay extends Display {
 
-	private double[] scale = new double[Constants.AXIS_COUNT];
+	protected double[] scale = new double[Constants.AXIS_COUNT];
+	protected String[] relevantActionLists;
 	
 	/**
 	 * 
@@ -38,8 +39,9 @@ public class RangeModelTransformationDisplay extends Display {
 	/**
 	 * @param vis
 	 */
-	public RangeModelTransformationDisplay(Visualization vis) {
+	public RangeModelTransformationDisplay(Visualization vis,String[] relevantActionLists) {
 		super(vis);
+		this.relevantActionLists = relevantActionLists;
 		for(int i=0; i<Constants.AXIS_COUNT; i++)
 			scale[i] = 1.0;
 	}
@@ -65,8 +67,8 @@ public class RangeModelTransformationDisplay extends Display {
 		ArrayList<Double> minPositions = new ArrayList<Double>();
 		ArrayList<Double> maxPositions = new ArrayList<Double>();
 		
-		for(Object iKey : m_vis.getActions().keys()) {
-			Activity iAc = m_vis.getActions().get((String)iKey);
+		for(String iKey : relevantActionLists) {
+			Activity iAc = m_vis.getAction(iKey);
 			if (iAc instanceof ActionList) {
 				for (int i=0; i<((ActionList)iAc).size(); i++) {
 					Action iAc2  = ((ActionList)iAc).get(i);
@@ -117,6 +119,10 @@ public class RangeModelTransformationDisplay extends Display {
 		}
 		
 		m_clip.invalidate();
+		for(String iKey : relevantActionLists) {
+			Activity iAc = m_vis.getAction(iKey);
+			iAc.run();
+		}		
 	}
 	
     public double getScale() {

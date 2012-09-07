@@ -98,17 +98,10 @@ public class RangeModelTransformationDisplay extends Display {
 			zoomFocus -= minPositions.get(i);
 			zoomFocus /= (maxPositions.get(i)-minPositions.get(i));
 			ValuedRangeModel iModel = rangeModels.get(i);
-			if(absolute) {
-				zoomFocus *= (iModel.getMaximum()-iModel.getMinimum());
-				zoomFocus += iModel.getMinimum();
-				iModel.setValue((int)Math.round(zoomFocus - (iModel.getMaximum()-iModel.getMinimum()) * 0.5 * scale));
-				iModel.setExtent((int)Math.round((iModel.getMaximum()-iModel.getMinimum()) * scale));
-			} else {
-				zoomFocus *= iModel.getExtent();
-				zoomFocus += iModel.getValue();
-				iModel.setValue((int)Math.round(zoomFocus - iModel.getExtent() * 0.5 * scale));
-				iModel.setExtent((int)Math.round(iModel.getExtent() * scale));
-			}		
+			zoomFocus *= iModel.getExtent();
+			zoomFocus += iModel.getValue();
+			iModel.setValue((int)Math.round(zoomFocus - iModel.getExtent() * 0.5 * scale));
+			iModel.setExtent((int)Math.round(iModel.getExtent() * scale));
 		}	
 		
 		for(int i=0; i<axes.size(); i++) {

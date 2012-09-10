@@ -107,9 +107,14 @@ public class RangeModelTransformationDisplay extends Display {
 			zoomFocus *= iModel.getExtent();
 			zoomFocus += iModel.getValue();
 			int newValue = (int)Math.round(zoomFocus - iModel.getExtent() * 0.5 / scale);
-			int newExtent = (int)Math.round(iModel.getExtent() / scale); 
-			iModel.setValue(newValue);
-			iModel.setExtent(newExtent);
+			int newExtent = (int)Math.round(iModel.getExtent() / scale);
+			if(newValue + iModel.getExtent() < 10000 ) {
+				iModel.setValue(newValue);
+				iModel.setExtent(newExtent);
+			} else {
+				iModel.setExtent(newExtent);				
+				iModel.setValue(newValue);
+			}
 		}	
 		
 		for(int i=0; i<axes.size(); i++) {

@@ -130,7 +130,7 @@ public class RangeModelTransformationDisplay extends Display {
         return scale[Constants.X_AXIS];
     }
 
-	public synchronized void allAxesPan(double dx, double dy) {
+	public synchronized void pan(double dx, double dy) {
 		ArrayList<Integer> allAxes = new ArrayList<Integer>();
 		allAxes.add(Constants.X_AXIS);
 		allAxes.add(Constants.Y_AXIS);
@@ -149,8 +149,14 @@ public class RangeModelTransformationDisplay extends Display {
 			ValuedRangeModel iModel = rangeModels.get(i);
 			double factor = axisTypes.get(i) == Constants.X_AXIS ? dx : dy;
 			factor /= (maxPositions.get(i) - minPositions.get(i));
-			int newValue = Math.min(0,Math.max(10000-iModel.getExtent(),(int)Math.round(iModel.getValue()+factor*10000.0)));
+			int newValue = Math.max(0,Math.min(10000-iModel.getExtent(),(int)Math.round(iModel.getValue()-factor*10000.0)));
 			iModel.setValue(newValue);
 		}
+		
+		m_clip.invalidate();
+		for(String iKey : relevantActionLists) {
+			Activity iAc = m_vis.getAction(iKey);
+			iAc.run();
+		}		
     }
 }

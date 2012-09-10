@@ -61,12 +61,9 @@ public class RangeModelTransformationDisplay extends Display {
 		baseZoom(p,scale,allAxes,absolute);
 	}
 	
-	public synchronized void baseZoom(final Point2D p, double scale,ArrayList<Integer> axes,boolean absolute) {		
-		ArrayList<ValuedRangeModel> rangeModels = new ArrayList<ValuedRangeModel>();
-		ArrayList<Integer> axisTypes = new ArrayList<Integer>();
-		ArrayList<Double> minPositions = new ArrayList<Double>();
-		ArrayList<Double> maxPositions = new ArrayList<Double>();
-		
+	public synchronized void findRelevantParameters(ArrayList<Integer> axes,ArrayList<ValuedRangeModel> rangeModels,
+			ArrayList<Integer> axisTypes,ArrayList<Double> minPositions,ArrayList<Double> maxPositions) {
+
 		for(String iKey : relevantActionLists) {
 			Activity iAc = m_vis.getAction(iKey);
 			if (iAc instanceof ActionList) {
@@ -92,6 +89,15 @@ public class RangeModelTransformationDisplay extends Display {
 				}
 			}				
 		}
+	}
+	
+	public synchronized void baseZoom(final Point2D p, double scale,ArrayList<Integer> axes,boolean absolute) {		
+		ArrayList<ValuedRangeModel> rangeModels = new ArrayList<ValuedRangeModel>();
+		ArrayList<Integer> axisTypes = new ArrayList<Integer>();
+		ArrayList<Double> minPositions = new ArrayList<Double>();
+		ArrayList<Double> maxPositions = new ArrayList<Double>();
+		
+		findRelevantParameters(axes,rangeModels,axisTypes,minPositions,maxPositions);
 		
 		for(int i=0; i<rangeModels.size(); i++) {
 			ValuedRangeModel iModel = rangeModels.get(i);
@@ -100,8 +106,10 @@ public class RangeModelTransformationDisplay extends Display {
 			zoomFocus /= (maxPositions.get(i)-minPositions.get(i));
 			zoomFocus *= iModel.getExtent();
 			zoomFocus += iModel.getValue();
-			iModel.setValue((int)Math.round(zoomFocus - iModel.getExtent() * 0.5 / scale));
-			iModel.setExtent((int)Math.round(iModel.getExtent() / scale));
+			int newValue = (int)Math.round(zoomFocus - iModel.getExtent() * 0.5 / scale);
+			int newExtent = (int)Math.round(iModel.getExtent() / scale); 
+			iModel.setValue(newValue);
+			iModel.setExtent(newExtent);
 		}	
 		
 		for(int i=0; i<axes.size(); i++) {
@@ -120,5 +128,29 @@ public class RangeModelTransformationDisplay extends Display {
 	
     public double getScale() {
         return scale[Constants.X_AXIS];
+    }
+
+	public synchronized void allAxesPan(double dx, double dy) {
+		ArrayList<Integer> allAxes = new ArrayList<Integer>();
+		allAxes.add(Constants.X_AXIS);
+		allAxes.add(Constants.Y_AXIS);
+		basePan(dx,dy,allAxes);
+	}
+    
+    public synchronized void basePan(double dx, double dy,ArrayList<Integer> axes) {
+		ArrayList<ValuedRangeModel> rangeModels = new ArrayList<ValuedRangeModel>();
+		ArrayList<Integer> axisTypes = new ArrayList<Integer>();
+		ArrayList<Double> minPositions = new ArrayList<Double>();
+		ArrayList<Double> maxPositions = new ArrayList<Double>();
+		
+		findRelevantParameters(axes,rangeModels,axisTypes,minPositions,maxPositions);
+    	
+		for(int i=0; i<rangeModels.size(); i++) {
+			ValuedRangeModel iModel = rangeModels.get(i);
+			double factor = axisTypes.get(i) == Constants.X_AXIS ? dx : dy;
+			factor /= (maxPositions.get(i) - minPositions.get(i));
+			int newValue = Math.min(0,Math.max(10000-iModel.getExtent(),(int)Math.round(iModel.getValue()+factor*10000.0)));
+			iModel.setValue(newValue);
+		}
     }
 }

@@ -123,10 +123,25 @@ public class DataHelper {
      */
     @SuppressWarnings("unchecked")
     public static void printTable(PrintStream out, TupleSet table, String... cols) {
+    	printTable(out,table,null,cols);
+    }
+    
+    /**
+     * Helper method to dump specific columns of a table or other tuple set to some output stream
+     * @param out the output to use
+     * @param table the Table to print
+     * @param info additional information interface
+     * @param cols the name of the columns
+     */
+    @SuppressWarnings("unchecked")
+    public static void printTable(PrintStream out, TupleSet table, AdditionalNodeInformation info, String... cols) {
         
         for (String c : cols) 
             out.printf(" %19s", c + " ");
             
+		if (info != null)
+			out.printf(info.provideHeading(table));
+        
         out.println();
 
         Iterator<Tuple> i = table.tuples();
@@ -136,6 +151,9 @@ public class DataHelper {
             for (String c : cols) 
                 if (tuple.canGetString(c))
                     out.printf(" %19s", tuple.getString(c) + " ");
+            
+    		if (info != null)
+    			out.printf(info.provideAdditionalInformation(tuple));
 
             out.println();
         }
@@ -241,10 +259,10 @@ public class DataHelper {
     }
     
     public interface AdditionalNodeInformation {
-    	public String provideHeading(Table table);
-    	public String provideAdditionalInformation(Node node);
+    	public String provideHeading(TupleSet table);
+    	public String provideAdditionalInformation(Tuple node);
     }
-
+    
     /**
      * Helper method to dump a table to some output stream
      * @param out the output to use
@@ -254,7 +272,21 @@ public class DataHelper {
         String[] cols = new String[table.getColumnCount()];
         for (int i=0; i< cols.length; i++) 
             cols[i] = table.getColumnName(i);
+    	
+    	printTable(out, table, null, cols);
+    }
+
+    /**
+     * Helper method to dump a table to some output stream
+     * @param out the output to use
+     * @param table the Table to print
+     * @param info additional information interface
+     */
+    public static void printTable(PrintStream out, Table table, AdditionalNodeInformation info) {
+        String[] cols = new String[table.getColumnCount()];
+        for (int i=0; i< cols.length; i++) 
+            cols[i] = table.getColumnName(i);
         
-        printTable(out, table, cols);
+        printTable(out, table, info, cols);
     }
 }

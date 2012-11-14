@@ -159,13 +159,16 @@ public class DataHelper {
         }
     }
     
-    public static void printForest(PrintStream out, TupleSet table, String... cols) {
-    	printForest(out,table,null,cols);
+    public static void printForest(PrintStream out, TupleSet table, long[] roots, int depth, String... cols) {
+    	printForest(out,table,roots,depth,null,cols);
     }
 
     
-    public static void printForest(PrintStream out, TupleSet table, AdditionalNodeInformation info, String... cols) {
+    public static void printForest(PrintStream out, TupleSet table, long[] roots, int depth, AdditionalNodeInformation info, String... cols) {
         
+    	for(int i=0; i<depth; i++)
+    		out.printf("  ");
+    	
         for (String c : cols) 
             out.printf(" %19s", c + " ");
             
@@ -174,16 +177,18 @@ public class DataHelper {
         
         out.println();
 
-        Iterator<Tuple> i = table.tuples();
-        while (i.hasNext()) {
-            Tuple tuple = i.next();
+        for(long iRoot : roots) {
+        	//printTuple(out,table.)
+        	//out.printf(" 0");
+
+            //Tuple tuple = i.next();           
             
-            for (String c : cols) 
-                if (tuple.canGetString(c))
-                    out.printf(" %19s", tuple.getString(c) + " ");
+            //for (String c : cols) 
+              //  if (tuple.canGetString(c))
+                //    out.printf(" %19s", tuple.getString(c) + " ");
             
-    		if (info != null)
-    			out.printf(info.provideAdditionalInformation(tuple));
+    		//if (info != null)
+    			//out.printf(info.provideAdditionalInformation(tuple));
 
             out.println();
         }

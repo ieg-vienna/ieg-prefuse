@@ -159,6 +159,36 @@ public class DataHelper {
         }
     }
     
+    public static void printForest(PrintStream out, TupleSet table, String... cols) {
+    	printForest(out,table,null,cols);
+    }
+
+    
+    public static void printForest(PrintStream out, TupleSet table, AdditionalNodeInformation info, String... cols) {
+        
+        for (String c : cols) 
+            out.printf(" %19s", c + " ");
+            
+		if (info != null)
+			out.printf(info.provideHeading(table));
+        
+        out.println();
+
+        Iterator<Tuple> i = table.tuples();
+        while (i.hasNext()) {
+            Tuple tuple = i.next();
+            
+            for (String c : cols) 
+                if (tuple.canGetString(c))
+                    out.printf(" %19s", tuple.getString(c) + " ");
+            
+    		if (info != null)
+    			out.printf(info.provideAdditionalInformation(tuple));
+
+            out.println();
+        }
+    }
+    
     /**
      * Helper method to dump specific columns of a graph, starting at a given node, treating that one as root, ignoring cycles
      * @param out the output to use

@@ -11,6 +11,9 @@ import prefuse.data.Node;
 import prefuse.data.Schema;
 import prefuse.data.Table;
 import prefuse.data.Tuple;
+import prefuse.data.expression.ColumnExpression;
+import prefuse.data.expression.ComparisonPredicate;
+import prefuse.data.expression.NumericLiteral;
 import prefuse.data.expression.Predicate;
 import prefuse.data.tuple.TupleSet;
 import prefuse.util.collections.IntIterator;
@@ -159,39 +162,64 @@ public class DataHelper {
         }
     }
     
-    public static void printForest(PrintStream out, TupleSet table, long[] roots, int depth, String... cols) {
-    	printForest(out,table,roots,depth,null,cols);
+    public static void printForest(PrintStream out, Table table, long[] roots, int depth, String idColumn, String... cols) {
+    	printForest(out,table,roots,depth,idColumn,null,cols);
     }
 
     
-    public static void printForest(PrintStream out, TupleSet table, long[] roots, int depth, AdditionalNodeInformation info, String... cols) {
+    public static void printForest(PrintStream out, Table table, long[] roots, int depth, String idColumn, AdditionalNodeInformation info, String... cols) {
         
     	for(int i=0; i<depth; i++)
     		out.printf("  ");
     	
         for (String c : cols) 
             out.printf(" %19s", c + " ");
-            
+
+    	out.printf("|");
+        
 		if (info != null)
 			out.printf(info.provideHeading(table));
         
         out.println();
 
         for(long iRoot : roots) {
-        	//printTuple(out,table.)
-        	//out.printf(" 0");
+        	Iterator iIterator = table.tuples(new ComparisonPredicate(ComparisonPredicate.EQ,new ColumnExpression("idColumn"),new NumericLiteral(iRoot)));
+        	if (!iIterator.hasNext())
+        		continue;
+        	Tuple iTuple = (Tuple)iIterator.next();
 
-            //Tuple tuple = i.next();           
-            
-            //for (String c : cols) 
-              //  if (tuple.canGetString(c))
-                //    out.printf(" %19s", tuple.getString(c) + " ");
-            
-    		//if (info != null)
-    			//out.printf(info.provideAdditionalInformation(tuple));
-
-            out.println();
+        	printForestRecursion(out, iTuple, 0, depth, info, cols);
+        	
         }
+    }
+    
+    public static void printForestRecursion(PrintStream out, Tuple tuple, int currentDepth, int maxDepth, AdditionalNodeInformation info, String... cols) {
+    	
+    	for(int i=0; i<currentDepth; i++)
+    		out.printf("  ");    	
+    	out.printf("%2d",currentDepth);
+    	for(int i=currentDepth+1; i<maxDepth; i++)
+    		out.printf("  ");    	
+
+    	out.printf("|");
+    	
+        for (String c : cols) 
+            if (tuple.canGetString(c))
+                out.printf(" %19s", tuple.getString(c) + " ");
+        
+		if (info != null)
+			out.printf(info.provideAdditionalInformation(tuple));
+
+        out.println();
+        
+    	if ( Node.class.isAssignableFrom(tuple.getClass())) {
+    		    
+    		Iterator<Tuple> childs = ((Node)tuple).inNeighbors();
+    		while(childs.hasNext()) {
+    			Tuple iTuple = childs.next();
+    			printForestRecursion(out,iTuple,currentDepth+1,maxDepth,info,cols);
+    		}
+    	}
     }
     
     /**

@@ -183,7 +183,7 @@ public class DataHelper {
         out.println();
 
         for(long iRoot : roots) {
-        	Iterator iIterator = table.tuples(new ComparisonPredicate(ComparisonPredicate.EQ,new ColumnExpression("idColumn"),new NumericLiteral(iRoot)));
+        	Iterator iIterator = table.tuples(new ComparisonPredicate(ComparisonPredicate.EQ,new ColumnExpression(idColumn),new NumericLiteral(iRoot)));
         	if (!iIterator.hasNext())
         		continue;
         	Tuple iTuple = (Tuple)iIterator.next();

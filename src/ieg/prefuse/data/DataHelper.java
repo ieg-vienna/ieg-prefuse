@@ -171,12 +171,12 @@ public class DataHelper {
         
     	for(int i=0; i<depth; i++)
     		out.printf("  ");
+
+    	out.printf("|");
     	
         for (String c : cols) 
             out.printf(" %19s", c + " ");
-
-    	out.printf("|");
-        
+       
 		if (info != null)
 			out.printf(info.provideHeading(table));
         

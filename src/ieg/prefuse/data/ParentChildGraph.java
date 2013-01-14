@@ -1,6 +1,7 @@
 package ieg.prefuse.data;
 
 import prefuse.data.Graph;
+import prefuse.data.Table;
 import prefuse.data.Tree;
 import prefuse.data.tuple.TupleManager;
 
@@ -27,6 +28,10 @@ public class ParentChildGraph extends Graph {
         super(true);
     }
     
+    public ParentChildGraph(Table nodes, Table edges) {
+        super(nodes, edges, true);
+    }
+
     @SuppressWarnings("rawtypes")
     public void initTupleManagers(Class nodeType, Class edgeType) {
         TupleManager nodeTuples = new TupleManager(super.getNodeTable(), this,

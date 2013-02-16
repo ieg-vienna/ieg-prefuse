@@ -11,6 +11,7 @@ import prefuse.data.Node;
 import prefuse.data.Schema;
 import prefuse.data.Table;
 import prefuse.data.Tuple;
+import prefuse.data.column.ColumnMetadata;
 import prefuse.data.expression.ColumnExpression;
 import prefuse.data.expression.ComparisonPredicate;
 import prefuse.data.expression.NumericLiteral;
@@ -324,6 +325,33 @@ public class DataHelper {
     public interface AdditionalNodeInformation {
     	public String provideHeading(TupleSet table);
     	public String provideAdditionalInformation(Tuple node);
+    }
+    
+    /**
+     * Alternative using {@link Schema#toString()}:
+     * <tt>System.out.println(table.getSchema());</tt>
+     * 
+     * @param table
+     */
+    public static void printMetadata(PrintStream out, Table table) {
+        out.println(" #            name       type      default     minimum      maximum");
+
+        boolean empty = table.getRowCount() == 0;
+        for (int i = 0; i < table.getColumnCount(); i++) {
+            String name = table.getColumnName(i);
+            @SuppressWarnings("rawtypes")
+            Class type = table.getColumnType(i);
+            ColumnMetadata meta = table.getMetadata(name);
+
+            out.printf("%2d %15s %10s %12s", i, name, type.getSimpleName(),
+                    table.getColumn(i).getDefaultValue());
+            if (!empty) {
+                out.printf("%12s %12s%n", table.get(meta.getMinimumRow(), i),
+                        table.get(meta.getMaximumRow(), i));
+            } else {
+                out.printf("%12s %12s%n", "n.a.", "n.a.");
+            }
+        }
     }
     
     /**

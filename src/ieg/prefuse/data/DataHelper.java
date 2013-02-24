@@ -182,6 +182,8 @@ public class DataHelper {
 			out.printf(info.provideHeading(table));
         
         out.println();
+        
+        Integer pathCount = new Integer(0);
 
         for(long iRoot : roots) {
         	Iterator iIterator = table.tuples(new ComparisonPredicate(ComparisonPredicate.EQ,new ColumnExpression(idColumn),new NumericLiteral(iRoot)));
@@ -189,12 +191,13 @@ public class DataHelper {
         		continue;
         	Tuple iTuple = (Tuple)iIterator.next();
 
-        	printForestRecursion(out, iTuple, 0, depth, info, cols);
-        	
+        	printForestRecursion(out, iTuple, 0, depth, info, pathCount, cols);        	
         }
+        
+        out.println("Total number of paths: "+pathCount);
     }
     
-    public static void printForestRecursion(PrintStream out, Tuple tuple, int currentDepth, int maxDepth, AdditionalNodeInformation info, String... cols) {
+    public static void printForestRecursion(PrintStream out, Tuple tuple, int currentDepth, int maxDepth, AdditionalNodeInformation info,Integer pathCount, String... cols) {
     	
     	for(int i=0; i<currentDepth; i++)
     		out.printf("  ");    	
@@ -216,9 +219,11 @@ public class DataHelper {
     	if ( Node.class.isAssignableFrom(tuple.getClass())) {
     		    
     		Iterator<Tuple> childs = ((Node)tuple).inNeighbors();
+    		if(!childs.hasNext())
+    			pathCount++;
     		while(childs.hasNext()) {
     			Tuple iTuple = childs.next();
-    			printForestRecursion(out,iTuple,currentDepth+1,maxDepth,info,cols);
+    			printForestRecursion(out,iTuple,currentDepth+1,maxDepth,info,pathCount,cols);
     		}
     	}
     }

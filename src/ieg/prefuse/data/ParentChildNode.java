@@ -25,6 +25,15 @@ import prefuse.data.tuple.TableNode;
  */
 public class ParentChildNode extends TableNode {
 
+	// used as column name for actions that calculate depth for nodes
+	// future work have ParentChildGraph calculate and remove the code from:
+	// GranularityAggregationAction
+	// MultiPredicatePatternDiscovery
+	// Consumers for this data which have to be considered are:
+	// CyclePlotlineAction
+	// OverlayDataColorAction
+    public static final String DEPTH = "_depth";
+	
     @Override
     public ParentChildGraph getGraph() {
         return (ParentChildGraph) super.getGraph();

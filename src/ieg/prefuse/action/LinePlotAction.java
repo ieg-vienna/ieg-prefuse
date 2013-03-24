@@ -12,7 +12,7 @@ import prefuse.visual.VisualItem;
 import prefuse.visual.VisualTable;
 
 /**
- * Adds a line plot segments to the visualization. The segments are saved in a
+ * Adds line plot segments to the visualization. The segments are saved in a
  * {@link VisualTable} and store the {@link VisualItem}s of their start and end
  * points. The action needs to run only once; unless new points are added.
  * 
@@ -60,9 +60,9 @@ public class LinePlotAction extends GroupAction {
         for ( VisualItem v1=null, v2; points.hasNext(); v1=v2 ) {
             v2 = (VisualItem)points.next();
             if ( v1 != null ) {
-                VisualItem item = lines.addItem();
-                item.set("v1", v1);
-                item.set("v2", v2);
+                VisualItem line = lines.addItem();
+                line.set("v1", v1);
+                line.set("v2", v2);
             }
         }
     }

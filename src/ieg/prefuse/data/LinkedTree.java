@@ -5,6 +5,7 @@ import java.util.Iterator;
 import prefuse.data.Edge;
 import prefuse.data.Graph;
 import prefuse.data.Node;
+import prefuse.data.Schema;
 import prefuse.data.Table;
 import prefuse.data.Tree;
 import prefuse.data.Tuple;
@@ -32,7 +33,12 @@ public class LinkedTree extends Table {
     LinkedNode root;
 
     public LinkedTree() {
-        super(0, 2, LinkedNode.class);
+    	this(null);
+    }
+    
+    public LinkedTree(Schema s) {
+   		super(0, s == null ? 4 : s.getColumnCount()+4, LinkedNode.class);
+   		super.addColumns(s);
         super.addColumn(FIELD_DEPTH, int.class, -1);
         super.addColumn(FIELD_PARENT, int.class, -1);
         super.addColumn(FIELD_FIRST_CHILD, int.class, -1);
@@ -68,7 +74,7 @@ public class LinkedTree extends Table {
     }
 
     @SuppressWarnings("rawtypes")
-    public Iterator depth(int depth) {
+    public Iterator nodesAtDepth(int depth) {
         super.index(FIELD_DEPTH);
         return super.tuples(new ComparisonPredicate(ComparisonPredicate.EQ,
                 new ColumnExpression(FIELD_DEPTH), new NumericLiteral(depth)));
@@ -119,6 +125,10 @@ public class LinkedTree extends Table {
         @Override
         public Iterator<Tuple> children() {
             return new ChildIterator(m_table, m_row);
+        }
+        
+        public LinkedNode addChild() {
+        	return ((LinkedTree)this.getTable()).addChild(this);
         }
 
         @Override

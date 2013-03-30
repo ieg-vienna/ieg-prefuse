@@ -32,7 +32,7 @@ public class ParentChildNode extends TableNode {
 	// Consumers for this data which have to be considered are:
 	// CyclePlotlineAction
 	// OverlayDataColorAction
-    public static final String DEPTH = "_depth";
+    public static final String DEPTH = "depth";	// AR/TL TODO think about mainlining ASAP 
 	
     @Override
     public ParentChildGraph getGraph() {

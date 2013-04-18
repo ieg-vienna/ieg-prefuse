@@ -28,6 +28,10 @@ public class ParentChildGraph extends Graph {
         super(true);
     }
     
+    public ParentChildGraph(Table nodes) {
+        super(nodes, true);
+    }
+
     public ParentChildGraph(Table nodes, Table edges) {
         super(nodes, edges, true);
     }

@@ -122,7 +122,6 @@ public class DataHelper {
      * @param table the Table to print
      * @param cols the name of the columns
      */
-    @SuppressWarnings("unchecked")
     public static void printTable(PrintStream out, TupleSet table, String... cols) {
     	printTable(out,table,null,cols);
     }
@@ -160,14 +159,12 @@ public class DataHelper {
         }
     }
     
-    @SuppressWarnings("rawtypes")
-    public static void printForest(PrintStream out, Table table, Iterable roots, int depth, String idColumn, String... cols) {
+    public static void printForest(PrintStream out, Table table, Iterable<? extends Tuple> roots, int depth, String idColumn, String... cols) {
     	printForest(out,table,roots,depth,idColumn,null,cols);
     }
 
     public static int pathCount;
-    @SuppressWarnings("rawtypes")
-    public static void printForest(PrintStream out, Table table, Iterable roots, int depth, String idColumn, AdditionalNodeInformation info, String... cols) {
+    public static void printForest(PrintStream out, Table table, Iterable<? extends Tuple> roots, int depth, String idColumn, AdditionalNodeInformation info, String... cols) {
         
     	for(int i=0; i<depth; i++)
     		out.printf("  ");
@@ -184,8 +181,8 @@ public class DataHelper {
         
         pathCount = 0;
 
-        for(Object iTuple : roots) {
-        	printForestRecursion(out, (Tuple)iTuple, 0, depth, info, cols);        	
+        for(Tuple iTuple : roots) {
+        	printForestRecursion(out, iTuple, 0, depth, info, cols);        	
         }
         
         out.println("Total number of paths: "+pathCount);
@@ -229,7 +226,6 @@ public class DataHelper {
      * @param info additional information interface
      * @param cols the name of the columns
      */
-    @SuppressWarnings("unchecked")
     public static void printGraph(PrintStream out, Node start, AdditionalNodeInformation info, String... cols) {
 
     	int depth = graphDepthHelper(start,new ArrayList<Node>());    	    

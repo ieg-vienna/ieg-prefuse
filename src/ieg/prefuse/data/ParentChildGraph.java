@@ -9,7 +9,7 @@ import prefuse.data.tuple.TupleManager;
  * Hierarchical structure where a node can have multiple parents and multiple
  * children. This is realized as a directed {@link Graph}, where inbound edges
  * connect a node to its children and outgoing edges connect it to its parents.
- * Note that edges are direction is opposite in the {@link Tree} class.
+ * Note that edges direction is opposite in the {@link Tree} class.
  * 
  * <p>
  * The proxy tuple type {@link ParentChildNode} provides suitable convenience methods.

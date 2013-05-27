@@ -12,9 +12,6 @@ import prefuse.data.Schema;
 import prefuse.data.Table;
 import prefuse.data.Tuple;
 import prefuse.data.column.ColumnMetadata;
-import prefuse.data.expression.ColumnExpression;
-import prefuse.data.expression.ComparisonPredicate;
-import prefuse.data.expression.NumericLiteral;
 import prefuse.data.expression.Predicate;
 import prefuse.data.tuple.TupleSet;
 import prefuse.util.collections.IntIterator;
@@ -163,12 +160,14 @@ public class DataHelper {
         }
     }
     
-    public static void printForest(PrintStream out, Table table, long[] roots, int depth, String idColumn, String... cols) {
+    @SuppressWarnings("rawtypes")
+    public static void printForest(PrintStream out, Table table, Iterable roots, int depth, String idColumn, String... cols) {
     	printForest(out,table,roots,depth,idColumn,null,cols);
     }
 
     public static int pathCount;
-    public static void printForest(PrintStream out, Table table, long[] roots, int depth, String idColumn, AdditionalNodeInformation info, String... cols) {
+    @SuppressWarnings("rawtypes")
+    public static void printForest(PrintStream out, Table table, Iterable roots, int depth, String idColumn, AdditionalNodeInformation info, String... cols) {
         
     	for(int i=0; i<depth; i++)
     		out.printf("  ");
@@ -185,13 +184,8 @@ public class DataHelper {
         
         pathCount = 0;
 
-        for(long iRoot : roots) {
-        	Iterator iIterator = table.tuples(new ComparisonPredicate(ComparisonPredicate.EQ,new ColumnExpression(idColumn),new NumericLiteral(iRoot)));
-        	if (!iIterator.hasNext())
-        		continue;
-        	Tuple iTuple = (Tuple)iIterator.next();
-
-        	printForestRecursion(out, iTuple, 0, depth, info, cols);        	
+        for(Object iTuple : roots) {
+        	printForestRecursion(out, (Tuple)iTuple, 0, depth, info, cols);        	
         }
         
         out.println("Total number of paths: "+pathCount);

@@ -1,8 +1,10 @@
 package ieg.prefuse.data;
 
+import prefuse.data.Edge;
 import prefuse.data.Graph;
 import prefuse.data.Table;
 import prefuse.data.Tree;
+import prefuse.data.tuple.TableEdge;
 import prefuse.data.tuple.TupleManager;
 
 /**
@@ -13,9 +15,11 @@ import prefuse.data.tuple.TupleManager;
  * 
  * <p>
  * The proxy tuple type {@link ParentChildNode} provides suitable convenience methods.
- * However, the tuple type needs to be set using
- * {@link #initTupleManagers(Class, Class)}. This is not done automatically under
- * the assumption that a subclass of {@link ParentChildNode} would be used more often.
+ * 
+ * <p>
+ * Added:         201?-??-?? / AR<br>
+ * Modifications: 2013-06-11 / AR / tuple manager intialized
+ * </p>
  * 
  * @author Rind
  */
@@ -26,22 +30,46 @@ public class ParentChildGraph extends Graph {
      */
     public ParentChildGraph() {
         super(true);
+        initTupleManagers(ParentChildNode.class, TableEdge.class);
     }
     
-    public ParentChildGraph(Table nodes) {
+    public ParentChildGraph(Table nodes, boolean initTupleManager) {
         super(nodes, true);
+        if (initTupleManager) {
+            initTupleManagers(ParentChildNode.class, TableEdge.class);
+        }
     }
 
-    public ParentChildGraph(Table nodes, Table edges) {
+    public ParentChildGraph(Table nodes,
+            Class<? extends ParentChildNode> nodeType) {
+        super(nodes, true);
+        initTupleManagers(nodeType, TableEdge.class);
+    }
+
+    public ParentChildGraph(Table nodes, Table edges, boolean initTupleManager) {
         super(nodes, edges, true);
+        if (initTupleManager) {
+            initTupleManagers(ParentChildNode.class, TableEdge.class);
+        }
     }
 
-    @SuppressWarnings("rawtypes")
-    public void initTupleManagers(Class nodeType, Class edgeType) {
+    public ParentChildGraph(Table nodes, Table edges,
+            Class<? extends ParentChildNode> nodeType) {
+        super(nodes, edges, true);
+        initTupleManagers(nodeType, TableEdge.class);
+    }
+
+    public void initTupleManagers(Class<? extends ParentChildNode> nodeType,
+            Class<? extends Edge> edgeType) {
         TupleManager nodeTuples = new TupleManager(super.getNodeTable(), this,
                 nodeType);
         TupleManager edgeTuples = new TupleManager(super.getEdgeTable(), this,
                 edgeType);
+        initTupleManagers(nodeTuples, edgeTuples);
+    }
+
+    public void initTupleManagers(TupleManager nodeTuples,
+            TupleManager edgeTuples) {
         super.setTupleManagers(nodeTuples, edgeTuples);
         super.getNodeTable().setTupleManager(nodeTuples);
         super.getEdgeTable().setTupleManager(edgeTuples);

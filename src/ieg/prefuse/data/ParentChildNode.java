@@ -62,15 +62,15 @@ public class ParentChildNode extends TableNode {
         return getChild(getChildCount() - 1);
     }
 
-    @SuppressWarnings("rawtypes")
+    @SuppressWarnings("unchecked")
     @Override
-    public Iterator children() {
+    public Iterator<? extends ParentChildNode> children() {
         return super.inNeighbors();
     }
 
-    @SuppressWarnings("rawtypes")
+    @SuppressWarnings("unchecked")
     @Override
-    public Iterator childEdges() {
+    public Iterator<? extends Edge> childEdges() {
         return super.inEdges();
     }
 
@@ -118,13 +118,13 @@ public class ParentChildNode extends TableNode {
         return getParent(getParentCount() - 1);
     }
 
-    @SuppressWarnings("rawtypes")
-    public Iterator parents() {
+    @SuppressWarnings("unchecked")
+    public Iterator<? extends ParentChildNode> parents() {
         return super.outNeighbors();
     }
 
-    @SuppressWarnings("rawtypes")
-    public Iterator parentEdges() {
+    @SuppressWarnings("unchecked")
+    public Iterator<? extends Edge> parentEdges() {
         return super.outEdges();
     }
 

@@ -38,11 +38,13 @@ public class LinkedTree extends Table {
     
     public LinkedTree(Schema s) {
    		super(0, s == null ? 4 : s.getColumnCount()+4, LinkedNode.class);
-   		super.addColumns(s);
         super.addColumn(FIELD_DEPTH, int.class, -1);
         super.addColumn(FIELD_PARENT, int.class, -1);
         super.addColumn(FIELD_FIRST_CHILD, int.class, -1);
         super.addColumn(FIELD_NEXT_SIBLING, int.class, -1);
+        if (s != null) {
+            super.addColumns(s);
+        }
     }
 
     public LinkedNode addRoot() {

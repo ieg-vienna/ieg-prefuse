@@ -5,44 +5,41 @@ import java.awt.Shape;
 import java.awt.geom.Rectangle2D;
 
 import prefuse.Constants;
-import prefuse.action.assignment.SizeAction;
 import prefuse.render.AbstractShapeRenderer;
-import prefuse.util.ColorLib;
 import prefuse.visual.VisualItem;
 
 /**
+ * <p>
  * Renders a {@link VisualItem} with an interval as a rectangle (e.g., Gantt
  * chart, LifeLines).
- * 
- * <p> The renderer requires that both {@link VisualItem#SIZE} and
- * {@link VisualItem#SIZEY} are set; for example by a {@link SizeAction}.
- * 
  * </p>
- * TODO adapt javadoc The interval is determined by the {@link VisualItem}'s
- * coordinates (by default {@link VisualItem#X} and {@link VisualItem#getX()})
- * and the {@link IntervalBarRenderer}s maxX (see
- * {@link IntervalBarRenderer#IntervalBarRenderer(String)} and
- * {@link IntervalBarRenderer#getMaxXField()}) field. The rendered height is
+ * The interval is determined by the {@link VisualItem}'s coordinates (by
+ * default {@link VisualItem#X} and {@link VisualItem#getX()}) and the
+ * {@link OldIntervalBarRenderer}s maxX (see
+ * {@link OldIntervalBarRenderer#OldIntervalBarRenderer(String)} and
+ * {@link OldIntervalBarRenderer#getMaxXField()}) field. The rendered height is
  * determined by the {@link VisualItem}'s size field and the base size.
  * 
  * <p>
  * Added: 2012-06-13 / AR (based on work by Peter Weishapl)<br>
- * Modifications: 2012-06-13 / AR / no label; height set by size field; y axis<br>
- * 2013-06-12 / AR / width in VisualItem.SIZE instead of custom maxXField
+ * Modifications: 2012-06-13 / AR / no label; height set by size field; y axis
  * </p>
  * 
- * @author Rind, peterw
+ * @author peterw
  * @see IntervalLayout
  */
-public class IntervalBarRenderer extends AbstractShapeRenderer {
+@Deprecated
+public class OldIntervalBarRenderer extends AbstractShapeRenderer {
     protected Rectangle2D bounds = new Rectangle2D.Double();
 
     private int m_axis = Constants.X_AXIS;
 
+    protected String maxXField;
+
     private int m_baseSize = 10;
 
     /**
-     * Create a {@link IntervalBarRenderer}. Uses the given text data field to
+     * Create a {@link OldIntervalBarRenderer}. Uses the given text data field to
      * draw it's text label and the maxX data field to determine the interval to
      * be rendered, which is from {@link VisualItem}s x data field to the given
      * maxX data field.
@@ -52,10 +49,12 @@ public class IntervalBarRenderer extends AbstractShapeRenderer {
      * @param maxXField
      *            the data field used for the interval
      */
-    public IntervalBarRenderer() {
+    public OldIntervalBarRenderer(String maxXField) {
+        this.maxXField = maxXField;
     }
 
-    public IntervalBarRenderer(int m_baseSize) {
+    public OldIntervalBarRenderer(String maxXField, int m_baseSize) {
+        this.maxXField = maxXField;
         this.m_baseSize = m_baseSize;
     }
 
@@ -107,25 +106,29 @@ public class IntervalBarRenderer extends AbstractShapeRenderer {
      */
     protected Shape getRawShape(VisualItem item) {
         double startX = item.getX();
+        double endX = item.getDouble(maxXField);
         double startY = item.getY();
-        
-        // TODO consider to handle the drawRect width glitch globally 
-        // fix glitch that a border of stroke width 1 appears right of the area
-        float stroke = (ColorLib.alpha(item.getStrokeColor()) > 0
-                && super.getRenderType(item) != RENDER_TYPE_FILL 
-                && item.getStroke().getLineWidth() > 0) ? 1.0f : 0.0f;
+        double height = m_baseSize * item.getSize();
 
         if (Constants.X_AXIS == m_axis) {
-            double width = item.getSize() - stroke;
-            double height = m_baseSize * item.getSizeY() - stroke;
+            double width = endX - startX;
             bounds.setFrame(startX, startY - height / 2, width, height);
         } else {
-            double width = m_baseSize * item.getSize() - stroke;
-            double height = item.getSizeY() - stroke;
-            bounds.setFrame(startX - width / 2, startY, width, height);
+            double width = endX - startY;
+            System.out.println(startX - height / 2 + " " + startY + " "
+                    + height + " " + width);
+            bounds.setFrame(startX - height / 2, startY, height, width);
         }
 
         return bounds;
+    }
+
+    public String getMaxXField() {
+        return maxXField;
+    }
+
+    public void setMaxXField(String maxXField) {
+        this.maxXField = maxXField;
     }
 
     /**

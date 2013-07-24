@@ -49,6 +49,7 @@ import prefuse.visual.VisualItem;
 import prefuse.visual.VisualTable;
 import prefuse.visual.expression.InGroupPredicate;
 import prefuse.visual.expression.VisiblePredicate;
+import prefuse.visual.sort.ItemSorter;
 
 @SuppressWarnings("serial")
 public class LinePlotDemo extends JPanel {
@@ -192,6 +193,17 @@ public class LinePlotDemo extends JPanel {
         myDisplay.setSize(700,450);
         myDisplay.setHighQuality(true);
 
+        myDisplay.setItemSorter(new ItemSorter(){
+
+            @Override
+            public int score(VisualItem item) {
+                int score = super.score(item); 
+                return LINES.equals(item.getGroup()) ? score - 1 : score;
+            }
+            
+        });
+        
+        
         // enable tooltips for points
         ToolTipControl ttc = new ToolTipControl(new String[] {xfield,yfield});
         myDisplay.addControlListener(ttc);

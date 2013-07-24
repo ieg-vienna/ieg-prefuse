@@ -2,9 +2,7 @@ package ieg.prefuse.renderer;
 
 import java.awt.Shape;
 
-import prefuse.Constants;
 import prefuse.render.ShapeRenderer;
-import prefuse.visual.VisualItem;
 
 /**
  * 

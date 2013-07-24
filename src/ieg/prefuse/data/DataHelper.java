@@ -209,11 +209,11 @@ public class DataHelper {
         
     	if ( Node.class.isAssignableFrom(tuple.getClass())) {
     		    
-    		Iterator<Tuple> childs = ((Node)tuple).inNeighbors();
+    		Iterator<?> childs = ((Node)tuple).inNeighbors();
     		if(!childs.hasNext())
     			pathCount++;
     		while(childs.hasNext()) {
-    			Tuple iTuple = childs.next();
+    			Tuple iTuple = (Tuple) childs.next();
     			printForestRecursion(out,iTuple,currentDepth+1,maxDepth,info,cols);
     		}
     	}
@@ -276,7 +276,7 @@ public class DataHelper {
     	visited.add(current);
     	Node iNode;
     	int maxDepth = 0;
-    	for(Iterator i = current.neighbors(); i.hasNext();) {
+    	for(Iterator<?> i = current.neighbors(); i.hasNext();) {
     		iNode=(Node)i.next();
     		if(!visited.contains(iNode))
     			maxDepth = Math.max(maxDepth, graphDepthHelper(iNode,visited));   		
@@ -309,7 +309,7 @@ public class DataHelper {
 			out.printf(info.provideAdditionalInformation(current));
         out.println();
     	Node iNode;
-    	for(Iterator i = current.neighbors(); i.hasNext();) {
+    	for(Iterator<?> i = current.neighbors(); i.hasNext();) {
     		iNode=(Node)i.next();
     		if(!visited.contains(iNode)) {
     	        printGraphHelper(out,iNode,info,cols,depth,visited,level+1);

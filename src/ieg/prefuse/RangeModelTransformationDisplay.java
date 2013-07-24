@@ -3,8 +3,6 @@ package ieg.prefuse;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
 
-import javax.swing.BoundedRangeModel;
-
 import prefuse.Constants;
 import prefuse.Display;
 import prefuse.Visualization;
@@ -12,7 +10,6 @@ import prefuse.action.Action;
 import prefuse.action.ActionList;
 import prefuse.action.layout.AxisLayout;
 import prefuse.activity.Activity;
-import prefuse.data.query.NumberRangeModel;
 import prefuse.util.ui.ValuedRangeModel;
 
 /**

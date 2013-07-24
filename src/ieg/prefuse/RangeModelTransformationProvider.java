@@ -1,7 +1,5 @@
 package ieg.prefuse;
 
-import javax.swing.BoundedRangeModel;
-
 import prefuse.util.ui.ValuedRangeModel;
 
 /**

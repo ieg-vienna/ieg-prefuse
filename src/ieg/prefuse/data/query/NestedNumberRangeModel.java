@@ -14,7 +14,10 @@ import prefuse.data.query.NumberRangeModel;
  *
  */
 public class NestedNumberRangeModel extends NumberRangeModel {
-	protected Number[] min;
+
+    private static final long serialVersionUID = 1L;
+    
+    protected Number[] min;
 	protected Number[] max;
 	
 	/**

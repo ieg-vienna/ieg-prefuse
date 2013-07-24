@@ -1,25 +1,17 @@
 package ieg.prefuse.action.layout;
 
-import java.awt.geom.Rectangle2D;
 import java.util.Iterator;
 
 import prefuse.Constants;
-import prefuse.action.ItemAction;
 import prefuse.action.layout.AxisLayout;
-import prefuse.action.layout.Layout;
 import prefuse.data.expression.ColumnExpression;
 import prefuse.data.expression.ComparisonPredicate;
 import prefuse.data.expression.NumericLiteral;
-import prefuse.data.expression.Predicate;
 import prefuse.data.query.NumberRangeModel;
-import prefuse.data.query.ObjectRangeModel;
 import prefuse.data.tuple.TableTuple;
 import prefuse.data.tuple.TupleSet;
-import prefuse.render.PolygonRenderer;
-import prefuse.util.DataLib;
 import prefuse.util.MathLib;
 import prefuse.util.PrefuseLib;
-import prefuse.visual.AggregateItem;
 import prefuse.visual.NodeItem;
 import prefuse.visual.VisualGraph;
 import prefuse.visual.VisualItem;
@@ -49,7 +41,7 @@ public class TreeRangeAxisLayout extends AxisLayout {
 	}
     
     protected void numericalLayout(VisualGraph ts) {
-       	Iterator roots = ts.getNodes().tuples(new ComparisonPredicate(ComparisonPredicate.EQ,new ColumnExpression("depth"),new NumericLiteral(0)));
+       	Iterator<?> roots = ts.getNodes().tuples(new ComparisonPredicate(ComparisonPredicate.EQ,new ColumnExpression("depth"),new NumericLiteral(0)));
        	        
         m_dist[0] = 0;
         m_dist[1] = 0;
@@ -67,7 +59,7 @@ public class TreeRangeAxisLayout extends AxisLayout {
        	layout(roots,0);
     }
     
-    private void layout(Iterator iterator,double base) {
+    private void layout(Iterator<?> iterator,double base) {
     	    	
         while ( iterator.hasNext() ) {
         	NodeItem node = (NodeItem)iterator.next();

@@ -36,7 +36,7 @@ public class CategoryLinePlotAction extends LinePlotAction {
      * @param source
      *            the visual table containing points
      * @param categoryField
-     *            the field name by which lines are to be distinguised
+     *            the field name by which lines are to be distinguished
      */
     public CategoryLinePlotAction(String group, String source,
             String categoryField) {

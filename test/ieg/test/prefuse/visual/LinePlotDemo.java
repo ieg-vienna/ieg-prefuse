@@ -186,7 +186,7 @@ public class LinePlotDemo extends JPanel {
         // --------------------------------------------------------------------
         // STEP 3: set up a display and ui components to show the visualization
 
-        myDisplayPredicate.add(myLinesPredicate); // determine visiility of lines and points via check boxes
+        myDisplayPredicate.add(myLinesPredicate); // determine visibility of lines and points via check boxes
         // create display
         myDisplay = new Display(myVisualization, myDisplayPredicate);
         myDisplay.setBorder(BorderFactory.createEmptyBorder(5,5,5,5));

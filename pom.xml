@@ -1,0 +1,139 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>org.timebench</groupId>
+	<artifactId>ieg-prefuse</artifactId>
+	<version>1.0.0</version>
+	<name>${project.groupId}:${project.artifactId}</name>
+
+	<description>Common Java classes to extend the InfoVis library prefuse</description>
+	<url>https://github.com/ieg-vienna/ieg-prefuse</url>
+	<organization>
+		<name>CVAST</name>
+		<url>http://www.ieg.ifs.tuwien.ac.at/</url>
+	</organization>
+	<licenses>
+		<license>
+			<name>The BSD 2-Clause License</name>
+			<url>http://opensource.org/licenses/BSD-2-Clause</url>
+		</license>
+	</licenses>
+	<developers>
+		<developer>
+			<name>Alexander Rind</name>
+			<email>alexander.rind@fhstp.ac.at</email>
+			<organization>St. Poelten University of Applied Sciences - Institute for Creative Media Technologies</organization>
+			<organizationUrl>http://www.fhstp.ac.at/forschung/institute_bereiche/icmt</organizationUrl>
+		</developer>
+		<developer>
+			<name>Christian Bors</name>
+			<email>bors@ifs.tuwien.ac.at</email>
+			<organization>Vienna University of Technology - Information Engineering Group</organization>
+			<organizationUrl>http://www.cvast.tuwien.ac.at/</organizationUrl>
+		</developer>
+		<developer>
+			<name>Albert Amor-Amorós</name>
+			<email>amor@ifs.tuwien.ac.at</email>
+			<organization>Vienna University of Technology - Information Engineering Group</organization>
+			<organizationUrl>http://www.cvast.tuwien.ac.at/</organizationUrl>
+		</developer>
+		<developer>
+			<name>Bilal Alsallakh</name>
+			<email>bilal@cvast.tuwien.ac.at</email>
+			<organization>Vienna University of Technology - Information Engineering Group</organization>
+			<organizationUrl>http://www.cvast.tuwien.ac.at/</organizationUrl>
+		</developer>
+	</developers>
+	<dependencies>
+		<dependency>
+			<groupId>org.timebench</groupId>
+			<artifactId>prefuse-vienna</artifactId>
+			<version>1.0.0</version>
+		</dependency>
+	</dependencies>
+	<build>
+		<sourceDirectory>src</sourceDirectory>
+		<testSourceDirectory>test</testSourceDirectory>
+		<plugins>
+			<plugin>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.1</version>
+				<configuration>
+					<source>1.6</source>
+					<target>1.6</target>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.sonatype.plugins</groupId>
+				<artifactId>nexus-staging-maven-plugin</artifactId>
+				<version>1.6.5</version>
+				<extensions>true</extensions>
+				<configuration>
+					<serverId>ossrh</serverId>
+					<nexusUrl>https://oss.sonatype.org/</nexusUrl>
+					<autoReleaseAfterClose>true</autoReleaseAfterClose>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-gpg-plugin</artifactId>
+				<version>1.6</version>
+				<executions>
+					<execution>
+						<id>sign-artifacts</id>
+						<phase>verify</phase>
+						<goals>
+							<goal>sign</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-source-plugin</artifactId>
+				<version>2.2.1</version>
+				<executions>
+					<execution>
+						<id>attach-sources</id>
+						<goals>
+							<goal>jar-no-fork</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<version>2.9.1</version>
+				<executions>
+					<execution>
+						<id>attach-javadocs</id>
+						<goals>
+							<goal>jar</goal>
+						</goals>
+						<configuration>
+							<additionalparam>-Xdoclint:none</additionalparam>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+
+	<distributionManagement>
+		<snapshotRepository>
+			<id>ossrh</id>
+			<url>https://oss.sonatype.org/content/repositories/snapshots</url>
+		</snapshotRepository>
+		<repository>
+			<id>ossrh</id>
+			<url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+		</repository>
+	</distributionManagement>
+	<scm>
+		<connection>scm:git://github.com:ieg-vienna/ieg-prefuse.git</connection>
+		<developerConnection>scm:git:git@github.com:ieg-vienna/ieg-prefuse.git</developerConnection>
+		<url>https://github.com/ieg-vienna/ieg-prefuse</url>
+		<tag>${project.artifactId}-${project.version}</tag>
+	</scm>
+</project>

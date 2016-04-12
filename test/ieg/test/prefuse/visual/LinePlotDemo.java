@@ -1,6 +1,6 @@
 package ieg.test.prefuse.visual;
 
-import ieg.prefuse.action.LinePlotAction;
+import ieg.prefuse.action.layout.LinePlotAction;
 import ieg.prefuse.action.layout.LinePlotLayout;
 import ieg.prefuse.renderer.LineRenderer;
 import ieg.prefuse.renderer.StepChartLineRenderer;

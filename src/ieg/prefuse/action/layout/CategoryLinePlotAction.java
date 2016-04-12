@@ -1,10 +1,9 @@
 package ieg.prefuse.action.layout;
 
-import ieg.prefuse.action.LinePlotAction;
-
 import java.util.Iterator;
 import java.util.TreeMap;
 
+import prefuse.data.Tuple;
 import prefuse.data.expression.Predicate;
 import prefuse.visual.VisualItem;
 import prefuse.visual.VisualTable;
@@ -48,8 +47,17 @@ public class CategoryLinePlotAction extends LinePlotAction {
     @Override
     protected void connectPoints(VisualTable lines, Iterator points) {
         // insert a column with category into line table (if not there yet)
-        if (lines.getColumn(categoryField) == null)
-            lines.addColumn(categoryField, String.class);
+        if (lines.getColumn(categoryField) == null) {
+			Iterator tuples = m_vis.getGroup(m_src).tuples();
+			if (tuples.hasNext()) {
+				// we try to copy the column type from 1st row of source
+				Tuple firstTuple = (Tuple) tuples.next();
+				lines.addColumn(categoryField, firstTuple.getColumnType(categoryField));
+			} else {
+				// default to String
+				lines.addColumn(categoryField, String.class);
+			}
+        }
 
         // remember previous node for each time series
         TreeMap<Object, VisualItem> prevTupleMap = new TreeMap<Object, VisualItem>();

@@ -1,4 +1,4 @@
-package ieg.prefuse.action;
+package ieg.prefuse.action.layout;
 
 import java.util.Iterator;
 
